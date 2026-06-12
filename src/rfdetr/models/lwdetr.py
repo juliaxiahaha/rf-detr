@@ -359,6 +359,10 @@ class LWDETR(nn.Module):
             return enc.trunk.blocks
         if hasattr(enc, "encoder") and hasattr(enc.encoder, "encoder") and hasattr(enc.encoder.encoder, "layer"):
             return enc.encoder.encoder.layer
+        # SigLIP：enc.encoder.vision_model.encoder.layers
+        if hasattr(enc, "encoder") and hasattr(enc.encoder, "vision_model"):
+            if hasattr(enc.encoder.vision_model.encoder, "layers"):
+                return enc.encoder.vision_model.encoder.layers
         return None
 
     def update_drop_path(self, drop_path_rate: float, vit_encoder_num_layers: int) -> None:

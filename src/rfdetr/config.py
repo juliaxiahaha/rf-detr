@@ -13,7 +13,12 @@ import torch
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_core import PydanticUndefined
 
-EncoderName: TypeAlias = Literal["dinov2_windowed_small", "dinov2_windowed_base", "dinov2_registers_windowed_small"]
+EncoderName: TypeAlias = Literal[
+    "dinov2_windowed_small",
+    "dinov2_windowed_base",
+    "dinov2_registers_windowed_small",
+    "siglip_base",
+]
 
 
 class PretrainWeightsCompatibilityWarning(UserWarning):
@@ -107,6 +112,7 @@ class ModelConfig(BaseConfig):
     num_channels: int = Field(default=3, ge=1)
     num_classes: int = 90
     pretrain_weights: Optional[str] = None
+    pretrained_encoder: Optional[str] = None
     # torch.device values are accepted at validation time and normalized to string.
     device: str = DEVICE
     resolution: int

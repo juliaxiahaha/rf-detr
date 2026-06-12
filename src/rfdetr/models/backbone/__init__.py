@@ -13,6 +13,7 @@ import torch
 from torch import nn
 
 from rfdetr.models.backbone.backbone import Backbone
+from rfdetr.models.backbone.backbone_SIGLIP import BackboneSIGLIP
 from rfdetr.models.position_encoding import build_position_encoding
 from rfdetr.utilities.tensors import NestedTensor
 
@@ -80,9 +81,7 @@ def build_backbone(
     """
     position_embedding = build_position_encoding(hidden_dim, position_embedding)
 
-    backbone = Backbone(
-        encoder,
-        pretrained_encoder,
+    backbone_kwargs = dict(
         window_block_indexes=window_block_indexes,
         drop_path=drop_path,
         out_channels=out_channels,
@@ -100,6 +99,11 @@ def build_backbone(
         num_windows=num_windows,
         positional_encoding_size=positional_encoding_size,
     )
+    # SigLIP 与 DINO 共用 Joiner + projector
+    if encoder.startswith("siglip"):
+        backbone = BackboneSIGLIP(encoder, pretrained_encoder, **backbone_kwargs)
+    else:
+        backbone = Backbone(encoder, pretrained_encoder, **backbone_kwargs)
 
     model = Joiner(backbone, position_embedding)
     return model

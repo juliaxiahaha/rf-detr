@@ -1,0 +1,22 @@
+# SigLIP-base + RF-DETR Nano on COCO
+# Usage: rfdetr fit --config configs/siglip_nano.yaml
+
+model:
+  model_config:
+    class_path: rfdetr.config.RFDETRNanoConfig
+    init_args:
+      encoder: siglip_base
+      pretrain_weights: null
+      num_windows: 1
+      num_classes: 80
+  train_config:
+    class_path: rfdetr.config.TrainConfig
+    init_args:
+      dataset_file: coco
+      dataset_dir: ""
+      output_dir: ""
+      epochs: 50
+      batch_size: 16
+      grad_accum_steps: 1
+      num_workers: 8
+      tensorboard: true
